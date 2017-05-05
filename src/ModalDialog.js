@@ -21,10 +21,10 @@ const styles = {
   closeButton: {
     position: 'absolute',
     top: 0,
-    left: -50,
+    right: 0,
     display: 'block',
-    width: 40,
-    height: 40,
+    width: 30,
+    height: 30,
     transition: 'transform 0.1s',
     // backgroundImage: require('../images/modal-dialog-close.png'),
     // backgroundRepeat: 'no-repeat',
@@ -52,6 +52,7 @@ export default class ModalDialog extends React.Component {
     recenter: PropTypes.func.isRequired,
     top: PropTypes.number,
     dismissOnBackgroundClick: PropTypes.bool,
+    closeButtonParam: PropTypes.object,
   }
   static defaultProps = {
     width: 'auto',
@@ -158,6 +159,7 @@ export default class ModalDialog extends React.Component {
         topOffset,
         width,
         dismissOnBackgroundClick,
+        closeButtonParam = {},
         ...rest,
       },
     } = this;
@@ -171,6 +173,14 @@ export default class ModalDialog extends React.Component {
       ...style,
     };
 
+    const closeBtnParam = {
+      diameter: 30,
+      margin: 8,
+      rectWidth: 1.5,
+      color: '#000',
+      ...closeButtonParam,
+    };
+
     const divClassName = classNames(inject(styles.dialog), className);
 
     return <div {...rest}
@@ -181,7 +191,24 @@ export default class ModalDialog extends React.Component {
       {
         onClose ?
         <a className={inject(styles.closeButton)} onClick={onClose}>
-          <CloseCircle diameter={40}/>
+          <svg width={closeBtnParam.diameter} height={closeBtnParam.diameter}>
+            <g transform={`rotate(45 ${closeBtnParam.diameter / 2} ${closeBtnParam.diameter / 2})`}>
+              <rect
+                x={closeBtnParam.margin}
+                y={(closeBtnParam.diameter - closeBtnParam.rectWidth) / 2}
+                width={closeBtnParam.diameter - (2 * closeBtnParam.margin)}
+                height={closeBtnParam.rectWidth}
+                fill={closeBtnParam.color}
+              />
+              <rect
+                y={closeBtnParam.margin}
+                x={(closeBtnParam.diameter - closeBtnParam.rectWidth) / 2}
+                height={closeBtnParam.diameter - (2 * closeBtnParam.margin)}
+                width={closeBtnParam.rectWidth}
+                fill={closeBtnParam.color}
+              />
+            </g>
+          </svg>
         </a> :
         null
       }
